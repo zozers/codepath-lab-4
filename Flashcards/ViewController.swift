@@ -68,13 +68,11 @@ class ViewController: UIViewController {
             updateLables()
             updateNextPrev()
         }
-        
-       
-
     }
 
     @IBAction func button1Press(_ sender: Any) {
-        frontLabel.isHidden = true
+        
+        flipFlashcard()
     }
     
     @IBAction func button2Press(_ sender: Any) {
@@ -87,21 +85,67 @@ class ViewController: UIViewController {
     }
     
     @IBAction func didTapCard(_ sender: Any) {
-
-        frontLabel.isHidden = !frontLabel.isHidden
+        flipFlashcard()
+    }
+    
+    func flipFlashcard(){
+       
+        UIView.transition(with: card, duration: 0.3, options: .transitionFlipFromRight, animations:{
+            self.frontLabel.isHidden = !self.frontLabel.isHidden
+        })
+    }
+    
+    func animateCardOutNext(){
+        UIView.animate(withDuration: 0.3, animations: {
+            self.card.transform = CGAffineTransform.identity.translatedBy(x: -300.0, y: 0.0)
+        }, completion: { finished in
+            
+            self.updateLables()
+            
+            self.animateCardInNext()
+            
+        })
+    }
+    
+    func animateCardInNext(){
+        card.transform = CGAffineTransform.identity.translatedBy(x: 300.0, y: 0.0)
+        UIView.animate(withDuration: 0.3){
+            self.card.transform = CGAffineTransform.identity
+        }
+    }
+    
+    func animateCardOutPrev(){
+        UIView.animate(withDuration: 0.3, animations: {
+            self.card.transform = CGAffineTransform.identity.translatedBy(x: 300.0, y: 0.0)
+        }, completion: { finished in
+            
+            self.updateLables()
+            
+            self.animateCardInPrev()
+            
+        })
+    }
+    
+    func animateCardInPrev(){
+        card.transform = CGAffineTransform.identity.translatedBy(x: -300.0, y: 0.0)
+        UIView.animate(withDuration: 0.3){
+            self.card.transform = CGAffineTransform.identity
+        }
     }
     
     @IBAction func didTapPrev(_ sender: Any) {
         currentIndex -= 1
-        updateLables()
+//        updateLables()
         
         updateNextPrev()
+        animateCardOutPrev()
     }
     
     @IBAction func didTapNext(_ sender: Any) {
         currentIndex += 1
-        updateLables()
+//        updateLables()
         updateNextPrev()
+        animateCardOutNext()
     }
     
     func updateNextPrev(){
